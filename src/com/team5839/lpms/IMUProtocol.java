@@ -3,20 +3,21 @@ package com.team5839.lpms;
 public class IMUProtocol {
 
 	
-	public static float decodebyte2float(byte[] b, int index) {    
-	    int l;                                             
-	    l = b[index + 0];                                  
-	    l &= 0xff;                                         
-	    l |= ((long) b[index + 1] << 8);                   
-	    l &= 0xffff;                                       
-	    l |= ((long) b[index + 2] << 16);                  
-	    l &= 0xffffff;                                     
-	    l |= ((long) b[index + 3] << 24);                  
-	    return Float.intBitsToFloat(l);                    
+	public static float decodebyte2float(byte byte1, byte byte2, byte byte3, byte byte4) {
+		byte[] b = {byte1, byte2, byte3, byte4};
+	    int buff;                                             
+	    buff = b[0];                                  
+	    buff &= 0xff;                                         
+	    buff |= ((long) b[1] << 8);                   
+	    buff &= 0xffff;                                       
+	    buff |= ((long) b[2] << 16);                  
+	    buff &= 0xffffff;                                     
+	    buff |= ((long) b[3] << 24);                  
+	    return Float.intBitsToFloat(buff);                    
 	}  
     
     public static byte decodebit2Byte(String bit) {  
-        int re, len;  
+        int goal, len;  
         if (null == bit) {  
             return 0;  
         }  
@@ -26,14 +27,14 @@ public class IMUProtocol {
         }  
         if (len == 8) { 
             if (bit.charAt(0) == '0') {
-                re = Integer.parseInt(bit, 2);  
+                goal = Integer.parseInt(bit, 2);  
             } else { 
-                re = Integer.parseInt(bit, 2) - 256;  
+                goal = Integer.parseInt(bit, 2) - 256;  
             }  
         } else {  
-            re = Integer.parseInt(bit, 2);  
+            goal = Integer.parseInt(bit, 2);  
         }  
-        return (byte) re;  
+        return (byte) goal;  
     }
     
    public static byte[] decodebyte2bitarray(byte b) {  

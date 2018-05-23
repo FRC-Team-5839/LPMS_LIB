@@ -1,15 +1,12 @@
 package com.team5839.lpms;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj.I2C;
 
 class RegisterIO_I2C implements IRegisterIO{
 
     I2C port;
     boolean trace = false;
+    private byte[] temp = new byte[1];
     
     public RegisterIO_I2C( I2C i2c_port ) {
         port = i2c_port;
@@ -62,6 +59,18 @@ class RegisterIO_I2C implements IRegisterIO{
             }
         }
         return (len == 0);
+    }
+    
+    public byte read(byte addr) {
+    	boolean read_aborted = true;
+    	synchronized(this) {
+    		read_aborted = port.read(addr, 1, temp);
+    	}
+    	if (read_aborted) {
+    		System.out.println("LPMS I2C Read Error");
+		}
+		return temp[0];
+    	
     }
 
 
