@@ -177,70 +177,25 @@ public class LPMS extends SensorBase implements PIDSource, Sendable {
     volatile float		timestamp;
     
     RegisterIO_I2C		registerIO;
-    IOThread			ioThread;
     
-    /**
-     * Constructs the AHRS class using I2C communication, overriding the 
-     * default update rate with a custom rate which may be from 4 to 200, 
-     * representing the number of updates per second sent by the sensor.  
-     *<p>
-     * This constructor should be used if communicating via I2C.
-     *<p>
-     * Note that increasing the update rate may increase the 
-     * CPU utilization.
-     *<p>
-     * @param i2c_port_id I2C Port to use
-     * @param update_rate_hz Custom Update Rate (Hz)
-     */
     public LPMS() {
     	registerIO = new RegisterIO_I2C(new I2C(Port.kMXP, 0x33));
-    	ioThread = new IOThread();
-    	ioThread.start();
     	
     }
     
-
-	class IOThread implements Runnable {
-        
-        Thread              m_thread;
-        boolean             stop;
-        
-        public void start() {
-        	m_thread = new Thread(null, this, "LPMSDataThread");
-        	stop = false;
-            m_thread.start();
-        }
-        
-        @Override
-		public void run() {
-        	while (!stop) {
-        		acquire();
-        	}
-
-        }
-   
-        public void stop() {
-        	stop = true;
-        }
-    }
-
-    public void acquire() {
-    	getRaw_gyro_x_0();
-    	getRaw_gyro_x_1();
-    	getRaw_gyro_x_2();
-    	getRaw_gyro_x_3();
-    	getRaw_gyro_x_all();
-    	
-    }
 	@Override
 	public void initSendable(SendableBuilder builder) {
 	      builder.setSmartDashboardType("LPMS IMU");
 	      builder.addDoubleProperty("EulerX", this::getEulerX, null);
 	      builder.addDoubleProperty("EulerY", this::getEulerY, null);
 	      builder.addDoubleProperty("EulerZ", this::getEulerZ, null);
-	      builder.addDoubleProperty("GyroX", this::getRaw_gyro_x, null);
-	      builder.addDoubleProperty("GyroY", this::getRaw_gyro_y, null);
-	      builder.addDoubleProperty("GyroZ", this::getRaw_gyro_z, null);
+	      builder.addDoubleProperty("QuaternionW", this::getQuaternionW, null);
+	      builder.addDoubleProperty("QuaternionX", this::getQuaternionX, null);
+	      builder.addDoubleProperty("QuaternionY", this::getQuaternionY, null);
+	      builder.addDoubleProperty("QuaternionZ", this::getQuaternionZ, null);
+	      builder.addDoubleProperty("Linear_Accel_X", this::getWorld_linear_accel_x, null);
+	      builder.addDoubleProperty("Linear_Accel_Y", this::getWorld_linear_accel_y, null);
+	      builder.addDoubleProperty("Linear_Accel_Z", this::getWorld_linear_accel_z, null);
 		
 	}
 
