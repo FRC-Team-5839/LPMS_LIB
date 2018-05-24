@@ -3,8 +3,22 @@ package com.team5839.lpms;
 public class IMUProtocol {
 
 	
-	public static float decodebyte2float(byte byte1, byte byte2, byte byte3, byte byte4) {
-		byte[] b = {byte1, byte2, byte3, byte4};
+	public static float decodebyte2float(byte[] b) {
+		int buff;                                             
+	    buff = b[0];                                  
+	    buff &= 0xff;                                         
+	    buff |= ((long) b[1] << 8);                   
+	    buff &= 0xffff;                                       
+	    buff |= ((long) b[2] << 16);                  
+	    buff &= 0xffffff;                                     
+	    buff |= ((long) b[3] << 24);                  
+	    return Float.intBitsToFloat(buff);    
+		
+	                   
+	}  
+	
+	public static float decodebyte2float(byte[] byte1, byte[] byte2, byte[] byte3, byte[] byte4) {
+		byte[] b = {byte1[0], byte2[0], byte3[0], byte4[0]};
 	    int buff;                                             
 	    buff = b[0];                                  
 	    buff &= 0xff;                                         
